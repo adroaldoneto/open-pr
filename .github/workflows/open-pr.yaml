@@ -22,7 +22,6 @@ jobs:
           merge_branch = merge-$branch
           git checkout -b $merge_branch
           git push -u origin $merge_branch
-          git checkout $branch
-          gh pr create --title "Atualização de $merge_branch" --body "Atualização de $merge_branch" --base $merge_branch
+          gh pr create --title "Atualização de $merge_branch" --body "Atualização de $merge_branch" --base $merge_branch --head $branch
           git checkout main
         done
