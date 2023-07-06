@@ -26,4 +26,4 @@ jobs:
           git checkout main
         done
       env:
-        GIHUB_TOKEN=${secrets.GH_TOKEN}
+        GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
