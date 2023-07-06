@@ -25,3 +25,5 @@ jobs:
           gh pr create --title "Atualização de $merge_branch" --body "Atualização de $merge_branch" --base $merge_branch --head $branch
           git checkout main
         done
+      env:
+        GIHUB_TOKEN=${secrets.GH_TOKEN}
