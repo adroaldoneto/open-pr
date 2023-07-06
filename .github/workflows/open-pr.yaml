@@ -19,8 +19,10 @@ jobs:
         branches=$(git branch -r --list "origin/rc-*" | sed 's/origin\///')
         for branch in $branches
         do
-          git checkout -b $branch
-          git push -u origin $branch
-          gh pr create --title "Atualização de $branch" --body "Atualização de $branch" --base main
+          merge_branch = merge-$branch
+          git checkout -b $merge_branch
+          git push -u origin $merge_branch
+          git checkout $branch
+          gh pr create --title "Atualização de $merge_branch" --body "Atualização de $merge_branch" --base $merge_branch
           git checkout main
         done
