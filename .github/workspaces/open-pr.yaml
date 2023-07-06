@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  open_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Verificar código
+      uses: actions/checkout@v2
+
+    - name: Criar e abrir PRs
+      run: |
+        git checkout main
+        git pull origin main
+
+        branches=$(git branch -r --list "origin/rc-*" | sed 's/origin\///')
+        for branch in $branches
+        do
+          git checkout -b $branch
+          git push -u origin $branch
+          gh pr create --title "Atualização de $branch" --body "Atualização de $branch" --base main
+          git checkout main
+        done
