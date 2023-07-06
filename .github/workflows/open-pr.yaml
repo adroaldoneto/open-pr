@@ -30,7 +30,6 @@ jobs:
           echo "$branch"
           MERGE_BRANCH="merge-$branch-$(date +%s)"
           git checkout -b $MERGE_BRANCH
-          git commit -asm "Create branch"
           git push --set-upstream origin $MERGE_BRANCH
 
           gh pr create \
