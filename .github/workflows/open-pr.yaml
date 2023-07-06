@@ -22,6 +22,7 @@ jobs:
 
         branches=$(git branch -r --list "origin/rc-*" | sed 's/origin\///')
         for branch in $branches
+        echo "$branch"
         do
           MERGE_BRANCH="merge-$branch-$(date +%s)"
           git checkout -b $MERGE_BRANCH
