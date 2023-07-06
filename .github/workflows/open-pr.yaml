@@ -20,7 +20,9 @@ jobs:
         git config user.email "action@github.com"
         git config user.name "GitHub Action"
 
-        branches=$(git branch -r --list "origin/rc-*" | sed 's/origin\///')
+        # branches=$(git branch -r --list "origin/rc-*" | sed 's/origin\///')
+        branches=$(git ls-remote --head origin "heads/rc-*" | awk -F'/' '{print $3}')
+
         for branch in $branches
         do
           echo "$branch"
