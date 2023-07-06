@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: Verificar código
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Criar e abrir PRs
       run: |
@@ -22,7 +22,7 @@ jobs:
           merge_branch = merge-$branch
           git checkout -b $merge_branch
           git push -u origin $merge_branch
-          gh pr create --title "Atualização de $merge_branch" --body "Atualização de $merge_branch" --base $merge_branch --head $branch
+          hub pull-request -b merge_branch -h $branch -m "Atualização de $branch"
           git checkout main
         done
       env:
