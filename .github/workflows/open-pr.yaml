@@ -34,8 +34,7 @@ jobs:
             --title "Update" \
             --body "Update with branch main" \
             --base $MERGE_BRANCH \
-            --head $branch \
-            --label UPDATE
+            --head $branch
           
           git checkout main
         done
