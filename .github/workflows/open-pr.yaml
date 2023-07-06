@@ -13,32 +13,26 @@ jobs:
     - name: Verificar código
       uses: actions/checkout@v2
 
-    - name: Criar e abrir PRs
+    - name: Create Pull Request
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
-        git checkout main
-        git pull origin main
+        git config user.email "action@github.com"
+        git config user.name "GitHub Action"
 
         branches=$(git branch -r --list "origin/rc-*" | sed 's/origin\///')
         for branch in $branches
         do
-          git checkout -b $branch
-          git push -u origin $branch
+          MERGE_BRANCH="merge-$branch-$(date +%s)"
+          git checkout -b $MERGE_BRANCH
+          git push --set-upstream origin $MERGE_BRANCH
 
-          title="Atualização de $branch"
-          body="Atualização de $branch"
-
-          response=$(curl -X POST \
-            -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d '{
-              "title": "'"${title}"'",
-              "body": "'"${body}"'",
-              "head": "'"${branch}"'",
-              "base": "main"
-            }' \
-            "https://api.github.com/repos/${{ github.repository }}/pulls")
-
-          echo "PR criado: $response"
-
+          gh pr create \
+            --title "Update" \
+            --body "Update with branch main" \
+            --base $MERGE_BRANCH \
+            --head $branch \
+            --label UPDATE
+          
           git checkout main
         done
