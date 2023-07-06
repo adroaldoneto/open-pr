@@ -1,0 +1,42 @@
+name: Abrir PRs para branches rc-*
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  open_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Verificar código
+      uses: actions/checkout@v2
+
+    - name: Create Pull Request
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        git config user.email "action@github.com"
+        git config user.name "GitHub Action"
+
+        git checkout main
+        git pull origin main
+
+        # branches=$(git branch -r --list "origin/rc-*" | sed 's/origin\///')
+        branches=$(git ls-remote --head origin "heads/rc-*" | awk -F'/' '{print $3}')
+        for branch in $branches
+        do
+          echo "$branch"
+          MERGE_BRANCH="merge-$branch-$(date +%s)"
+          git checkout -b $MERGE_BRANCH
+          git push --set-upstream origin $MERGE_BRANCH
+
+          gh pr create \
+            --title "Update" \
+            --body "Update with branch main" \
+            --base $MERGE_BRANCH \
+            --head $branch
+          
+          git checkout main
+        done
