@@ -1,3 +1,5 @@
+name: Abrir PRs para branches rc-*
+
 on:
   push:
     branches:
@@ -9,7 +11,7 @@ jobs:
 
     steps:
     - name: Verificar código
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
 
     - name: Criar e abrir PRs
       run: |
@@ -19,11 +21,24 @@ jobs:
         branches=$(git branch -r --list "origin/rc-*" | sed 's/origin\///')
         for branch in $branches
         do
-          merge_branch = merge-$branch
-          git checkout -b $merge_branch
-          git push -u origin $merge_branch
-          hub pull-request -b merge_branch -h $branch -m "Atualização de $branch"
+          git checkout -b $branch
+          git push -u origin $branch
+
+          title="Atualização de $branch"
+          body="Atualização de $branch"
+
+          response=$(curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{
+              "title": "'"${title}"'",
+              "body": "'"${body}"'",
+              "head": "'"${branch}"'",
+              "base": "main"
+            }' \
+            "https://api.github.com/repos/${{ github.repository }}/pulls")
+
+          echo "PR criado: $response"
+
           git checkout main
         done
-      env:
-        GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
