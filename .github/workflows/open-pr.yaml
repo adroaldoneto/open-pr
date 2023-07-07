@@ -31,7 +31,7 @@ jobs:
           echo "$branch"
           MERGE_BRANCH="merge-$branch-$(date +%s)"
           git checkout -b $MERGE_BRANCH
-          git pull
+          # git pull
           # git checkout $branch
           # git pull origin $branch
 
