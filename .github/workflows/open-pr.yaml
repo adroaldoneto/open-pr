@@ -24,13 +24,16 @@ jobs:
         git pull origin main
 
         # branches=$(git branch -r --list "origin/rc-*" | sed 's/origin\///')
-        branches=$(git ls-remote --head origin "heads/rc-*" | awk -F'/' '{print $3}')
+        branches=$(git ls-remote --head origin "heads/rc-*" | awk -F'/' '{print $3}') 
+
         for branch in $branches
         do
           echo "$branch"
           MERGE_BRANCH="merge-$branch-$(date +%s)"
           git checkout -b $MERGE_BRANCH
+          git merge $branch
           git push --set-upstream origin $MERGE_BRANCH
+
 
           gh pr create \
             --title "Update" \
