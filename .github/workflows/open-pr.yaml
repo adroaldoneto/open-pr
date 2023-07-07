@@ -32,12 +32,12 @@ jobs:
           MERGE_BRANCH="merge-$branch-$(date +%s)"
           git checkout -b $MERGE_BRANCH
           git pull
-          git checkout $branch
-          git pull origin $branch
+          # git checkout $branch
+          # git pull origin $branch
 
-          git checkout $MERGE_BRANCH
-          git merge $branch
-          git push --set-upstream origin $MERGE_BRANCH
+          # git checkout $MERGE_BRANCH
+          # git merge $branch
+          git push origin $MERGE_BRANCH
 
 
           gh pr create \
